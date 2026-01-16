@@ -71,7 +71,6 @@ Crop-based classification with context padding (10-15%).
 *Includes a prototype GUI for clinical workflow simulation.*
 
 ![GUI Screenshot](interface.png)
-*(Replace with Figure A.3 from the thesis showing the bounding box overlay)*
 
 ## 📄 Reference
 This repository is part of the Master's Thesis: *"Development of a Deep Learning pipeline for thyroid nodule diagnosis in ultrasound: comparison between CNN and Vision Transformers architectures"* (Sapienza University of Rome, 2024/2025).
