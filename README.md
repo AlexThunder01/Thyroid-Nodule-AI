@@ -1,79 +1,147 @@
-# Thyroid Nodule CAD Pipeline: CNNs vs. Vision Transformers
+# 🩺 Thyroid Nodule CAD Pipeline: CNNs vs. Vision Transformers
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.1-ee4c2c)
-![YOLOv12](https://img.shields.io/badge/YOLO-v12-green)
-![Status](https://img.shields.io/badge/Status-Research_Prototype-yellow)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.1-ee4c2c?logo=pytorch&logoColor=white)
+![YOLO](https://img.shields.io/badge/YOLO-v12-00FFFF?logo=yolo&logoColor=black)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Thesis](https://img.shields.io/badge/Type-Bachelor_Thesis-orange)
+
+> **Official Repository** for the Bachelor's Thesis:  
+> *"Sviluppo di una pipeline di Deep Learning per la diagnosi di noduli tiroidei in ecografia: confronto tra architetture CNN e Vision Transformers"* > **Sapienza University of Rome** (2024/2025)
+
+## 📑 Table of Contents
+- [Abstract](#-abstract)
+- [Key Features](#-key-features)
+- [Dataset & Pre-processing](#-dataset--pre-processing)
+- [Methodology](#-methodology)
+  - [Stage 1: Object Detection](#stage-1-object-detection)
+  - [Stage 2: Classification](#stage-2-classification)
+- [Results](#-results)
+- [Demo App](#-thyroid-ai-assistant-demo)
+- [Installation](#-installation)
+- [Citation](#-citation)
+
+---
 
 ## 📋 Abstract
-This repository hosts a comprehensive Deep Learning pipeline for the **Computer-Aided Diagnosis (CAD)** of thyroid nodules in ultrasound images. The project investigates the shift from traditional Convolutional Neural Networks (CNNs) to modern **Vision Transformers (ViTs)** and **Foundation Models**.
+Thyroid nodules are a common pathology, but accurately distinguishing between benign and malignant cases in ultrasound images is challenging due to speckle noise and operator subjectivity.
 
-The pipeline is designed as a two-stage system:
-1.  **Real-time Detection:** Localizing nodules using Anchor-Free and Transformer-based detectors.
-2.  **Risk Classification:** Stratifying nodules (Benign vs. Malignant) using Self-Supervised Learning (SSL) representations.
-
-The study utilizes a curated dataset of over **7,000 nodules** (TN5000 + AUITD) processed with perceptual hashing deduplication and image enhancement techniques.
+This project proposes a **two-stage Deep Learning pipeline** to automate this diagnosis. We conducted a comparative study between traditional **Convolutional Neural Networks (CNNs)** and modern **Vision Transformers (ViTs)** / **Foundation Models**. The study proves that Self-Supervised Learning (SSL) models like **DINOv3** significantly outperform supervised baselines in medical imaging tasks characterized by data scarcity and noise.
 
 ## 🚀 Key Features
-*   **State-of-the-Art Architectures:** Benchmarking **YOLOv12**, **DINO-DETR**, and **Faster R-CNN** for detection; **DINOv3**, **ConvNeXt V2**, and **EfficientNetV2** for classification.
-*   **Foundation Models:** Leveraging **DINOv3 (Self-Supervised Learning)** to handle speckle noise and visual ambiguity better than supervised CNNs.
-*   **Robust Pre-processing:** Automated deduplication via **Perceptual Hashing** and image enhancement using **CLAHE** and **Sharpening**.
-*   **Explainability:** Integrated **Saliency Maps** and **Attention Maps** to visualize morphological features (margins, microcalcifications) aligned with **TI-RADS** criteria.
-*   **GUI Demo:** A functional desktop application ("Thyroid AI Assistant") for real-time inference.
+* **Advanced Architectures:** Comparison of **YOLOv12**, **DINO-DETR**, **Faster R-CNN**, **DINOv3**, **ConvNeXt V2**, and **EfficientNetV2**.
+* **Foundation Models:** Utilization of DINOv3 (Self-Supervised) pre-trained on massive datasets (LVD-142M) to improve feature extraction.
+* **Robust Data Pipeline:** Automated deduplication via **Perceptual Hashing** (dHash) to prevent data leakage.
+* **Image Enhancement:** Implementation of a pre-processing pipeline using **CLAHE** (Contrast Limited Adaptive Histogram Equalization) and **Sharpening**.
+* **Explainable AI:** Integration of **Saliency Maps** to validate model decisions against **TI-RADS** clinical criteria (e.g., irregular margins, microcalcifications).
+* **GUI Prototype:** A fully functional desktop application ("Thyroid AI Assistant") for real-time inference.
 
-## 🛠️ Methodology & Pipeline
+---
 
-### 1. Data Preparation
-- **Datasets:** Aggregated from TN5000 and AUITD.
-- **Deduplication:** Hamming distance on Difference Hash (dHash) to prevent data leakage.
-- **Enhancement:** Adaptive Histogram Equalization (CLAHE) + Unsharp Masking.
+## 💾 Dataset & Pre-processing
 
-### 2. Stage 1: Object Detection
-Comparison of One-Stage vs. Two-Stage detectors.
-- **Best Performer:** **YOLOv12 (Medium)**
-- **Optimization:** Anchor-free detection with attention modules.
-- **Input:** Static Letterboxing (640x640).
+### Data Sources
+The study aggregates data from multiple open-source datasets to ensure heterogeneity:
+1.  **TN5000 (Thyroid Nodule 5000):** Biopsy-validated labels and high-quality segmentation masks.
+2.  **AUITD:** Additional data to introduce variability in ultrasound devices (Toshiba/Samsung).
 
-### 3. Stage 2: Classification (Benign vs. Malignant)
-Crop-based classification with context padding (10-15%).
-- **Best Performer:** **DINOv3-Large** (Foundation Model).
-- **Training Strategy:** Full Fine-Tuning of pre-trained SSL weights (LVD-142M).
-- **Loss:** Weighted Binary Cross-Entropy to handle class imbalance.
+**Total volume:** ~7,000 nodules (Split: 80% Train, 10% Val, 10% Test).
 
-## 📊 Experimental Results
+### Cleaning & Enhancement
+* **Deduplication:** Applied Hamming Distance on Perceptual Hashes to remove near-duplicate frames.
+* **Enhancement:**
+    * *CLAHE:* Improves local contrast.
+    * *Sharpening:* Emphasizes nodule boundaries (crucial for malignancy detection).
 
-### Object Detection (Test Set)
-| Model | mAP@50 | Recall | Inference Speed |
+---
+
+## 🛠 Methodology
+
+The pipeline consists of two distinct stages:
+
+### Stage 1: Object Detection
+**Goal:** Localize the nodule in the ultrasound frame.
+* **Models Tested:** YOLOv12 (Small/Medium/Large), DINO-DETR (ResNet/Swin backbones), Faster R-CNN.
+* **Technique:** Real-time anchor-free detection vs. Two-stage detection.
+
+### Stage 2: Classification
+**Goal:** Classify the localized crop as **Benign** or **Malignant**.
+* **Models Tested:** DINOv3 (ViT), ConvNeXt V2, EfficientNetV2, SVM (Radiomics baseline).
+* **Technique:** Full Fine-tuning with context padding (10-15% margin) to include the peri-nodular tissue (halo sign).
+
+---
+
+## 📊 Results
+
+### 🏆 Detection Performance
+**Winner:** `YOLOv12-Medium` achieved the best balance of speed and recall.
+
+| Model | mAP@50 | Recall | Inference Time |
 | :--- | :---: | :---: | :---: |
-| **YOLOv12-m** | **95.20%** | **92.97%** | **< 30ms (Real-time)** |
-| DINO-DETR (Swin-B)| 90.45% | 85.52% | High Latency |
-| Faster R-CNN | 89.94% | 81.20% | High False Positives |
+| **YOLOv12-m** | **95.20%** | **92.97%** | **< 30ms** |
+| DINO-DETR (Swin-B) | 90.45% | 85.52% | ~440ms |
+| Faster R-CNN | 89.94% | 81.20% | ~120ms |
 
-### Classification (Test Set)
+### 🏆 Classification Performance
+**Winner:** `DINOv3-Large` set the new state-of-the-art for this dataset.
+
 | Model | Architecture | AUC-ROC | Sensitivity (Recall) |
 | :--- | :--- | :---: | :---: |
-| **DINOv3-Large** | **ViT (SSL)** | **0.932** | **94.70%** |
-| DINOv3-Base | ViT (SSL) | 0.930 | 91.71% |
+| **DINOv3-Large** | **Foundation Model (SSL)** | **0.932** | **94.70%** |
+| DINOv3-Base | Foundation Model (SSL) | 0.930 | 91.71% |
 | ConvNeXt V2 | Modern CNN | 0.906 | 91.71% |
 | EfficientNetV2 | CNN | 0.898 | 92.63% |
-| SVM (Baseline) | Radiomics | 0.814 | 71.26% |
+| SVM | Hand-crafted Radiomics | 0.814 | 71.26% |
 
-> **Insight:** The Foundation Model (DINOv3) significantly outperforms CNNs in capturing subtle morphological patterns like microlobulated margins, demonstrating high robustness to ultrasound speckle noise.
+> **Clinical Insight:** DINOv3's attention maps accurately follow irregular margins and microcalcifications, showing a 90.1% alignment with human TI-RADS risk scoring on external validation.
 
-## 💻 Tech Stack
-*   **Language:** Python 3.x
-*   **Deep Learning:** PyTorch, Ultralytics (YOLO), Detrex/Detectron2 (Transformers)
-*   **Data Processing:** NumPy, OpenCV, scikit-image, ImageHash
-*   **Visualization:** Matplotlib, Seaborn, Grad-CAM
-*   **GUI:** CustomTkinter
+---
 
-## 📷 Demo Application
-*Includes a prototype GUI for clinical workflow simulation.*
+## 🖥 Thyroid AI Assistant (Demo)
+A custom GUI built with `CustomTkinter` allows for drag-and-drop inference.
 
-![GUI Screenshot](interface.png)
+**Features:**
+* Toggle Image Enhancement (CLAHE).
+* Real-time Detection & Classification.
+* Risk Probability visualization.
 
-## 📄 Reference
-This repository is part of the Master's Thesis: *"Development of a Deep Learning pipeline for thyroid nodule diagnosis in ultrasound: comparison between CNN and Vision Transformers architectures"* (Sapienza University of Rome, 2024/2025).
+*(Place screenshot here, e.g., `docs/gui_preview.png`)*
 
-## ⚖️ License
-Distributed under the MIT License. See `LICENSE` for more information.
+---
+
+## ⚙ Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/username/thyroid-nodule-detection.git](https://github.com/username/thyroid-nodule-detection.git)
+    cd thyroid-nodule-detection
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Download Pre-trained Weights:**
+    * *Note: Due to file size limits, weights are hosted externally.*
+    * Download `yolov12_medium.pt` and `dinov3_large_finetuned.pth` from [Release Page](#).
+
+4.  **Run the Demo:**
+    ```bash
+    python src/gui/app.py
+    ```
+
+---
+
+## 📖 Citation
+
+If you use this work, please cite the thesis:
+
+```bibtex
+@thesis{catania2025thyroid,
+  author       = {Alessandro Catania},
+  title        = {Sviluppo di una pipeline di Deep Learning per la diagnosi di noduli tiroidei in ecografia: confronto tra architetture CNN e Vision Transformers},
+  school       = {Sapienza Università di Roma},
+  year         = {2025},
+  type         = {Bachelor's Thesis}
+}
