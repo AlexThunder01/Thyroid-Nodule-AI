@@ -63,6 +63,30 @@ The project focuses on a **systematic comparison between CNN-based models and Vi
 
 ---
 
+## Full thesis document
+
+The complete thesis document associated with this project is included in
+this repository as:
+
+**`Thesis.pdf`**
+
+The thesis provides a detailed description of:
+- the clinical and technical background,
+- dataset characteristics,
+- model architectures,
+- experimental protocol,
+- quantitative and qualitative evaluation,
+- ablation studies,
+- discussion and limitations.
+
+The code, experiments, and results presented in this repository directly
+correspond to the methods and findings described in the thesis.
+
+> Note: The thesis is provided for academic and research purposes only.
+> Any reuse must properly cite the author.
+
+
+
 ## Methodology & experimental design
 
 ### Detection models evaluated
