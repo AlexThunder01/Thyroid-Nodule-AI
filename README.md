@@ -135,13 +135,11 @@ To improve transparency and interpretability, **Grad-CAM and attention-based hea
 
 These visualizations highlight image regions contributing most to the model decision and allow qualitative comparison with **K TI-RADS criteria** used in clinical practice.
 
-![Explainability heatmaps](assets/classification_heatmaps.png)
+![Explainability heatmaps](assets/classification_heatmaps.jpg)
 
 ---
 
 ## Pipeline overview
-
-![Pipeline diagram](assets/pipeline_diagram.svg)
 
 1. **Detection** — candidate nodule localization
 2. **Crop & enhancement** — ultrasound-specific preprocessing
@@ -173,8 +171,8 @@ python src/gui/app.py
 
 The GUI allows drag-and-drop inference with visualization of detection, classification scores, and Grad-CAM heatmaps.
 
-![GUI demo](assets/demo_gui1.png)
-![GUI demo](assets/demo_gui2.png)
+![GUI demo](assets/gui1.png)
+![GUI demo](assets/gui2.png)
 
 ---
 
