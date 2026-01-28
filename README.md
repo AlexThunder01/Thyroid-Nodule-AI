@@ -17,7 +17,7 @@
 - [Project Overview](#-project-overview)
 - [Methodology & Pipeline](#-methodology--pipeline)
 - [Key Results](#-key-results)
-- [Clinical Integration (TI-RADS)](#-clinical-integration-ti-rads)
+- [Clinical Integration (TI-RADS)](#-Clinical-Integration--Risk-Stratification)
 - [Installation](#-installation)
 - [Usage (GUI & CLI)](#-usage-gui--cli)
 - [Repository Structure](#-repository-structure)
@@ -87,21 +87,25 @@ The models were evaluated on the **TN5000** and **AUITD** datasets (7,000+ nodul
 
 ---
 
-## 🩺 Clinical Integration (TI-RADS)
+## 🩺 Clinical Integration & Risk Stratification
 
-The system is designed to act as a **Second Opinion** tool. The raw probability output ($p$) is mapped to the **K-TIRADS** risk stratification system to provide actionable feedback.
+The system is designed as a **Decision Support Tool**. While the model performs a binary classification (Benign vs. Malignant) using an optimized operational threshold ($p=0.38$), the raw probability score ($p$) provides a granular estimation of malignancy risk.
 
-| AI Probability ($p$) | Suggested Risk Class | Clinical Action |
-| :--- | :--- | :--- |
-| $p < 0.20$ | **TR1 / TR2 (Benign)** | No follow-up needed |
-| $0.20 \le p < 0.60$ | **TR3 / TR4 (Suspicious)** | Follow-up / FNA consideration |
-| $p \ge 0.60$ | **TR5 (High Risk)** | **Strong Biopsy Recommendation** |
+Validation on external datasets (Chapter 5.5.4) confirms that the model's confidence levels correlate strongly with the **K-TIRADS** risk categories, allowing for a professional interpretation of the AI output:
 
-### Explainability (Heatmaps)
-Unlike "Black Box" models, our system generates **Attention Maps** that align with radiological signs (e.g., microcalcifications, irregular margins).
+| AI Confidence ($p$) | Classification | Clinical Interpretation | Suggested Action |
+| :--- | :--- | :--- | :--- |
+| $p < 0.20$ | **Benign** | Low risk (Correlates to TR1/TR2) | Routine follow-up |
+| $0.20 \le p < 0.60$ | **Indeterminate** | Moderate risk (Correlates to TR3/TR4) | Short-term follow-up / FNA |
+| $p \ge 0.60$ | **Malignant** | **High Risk (Correlates to TR5)** | **Strong Biopsy Recommendation** |
+
+### 🔍 Explainability (Heatmaps)
+To move beyond "Black Box" AI, the pipeline integrates **Attention Maps** (for DINOv3) and **Grad-CAM** (for CNNs). This allows clinicians to verify if the AI is focusing on relevant radiological features, such as:
+*   **Irregular Margins:** Precisely outlined by the Transformer's global attention.
+*   **Microcalcifications:** Detected as high-frequency textures by the CNN backbones.
 
 ![Heatmaps](assets/classification_heatmaps.jpg)
-*Figure: DINOv3 attention maps focusing on the irregular borders of a malignant nodule.*
+*Figure: DINOv3 attention maps focusing on the irregular borders of a malignant nodule, aligning with K-TIRADS criteria.*
 
 ---
 
