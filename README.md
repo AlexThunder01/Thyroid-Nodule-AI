@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-lightgrey)](LICENSE)
 [![Thesis](https://img.shields.io/badge/Thesis-PDF-red?logo=adobe-acrobat&logoColor=white)](Thesis.pdf)
 
-![Hero Interface](assets/hero_gui.png)
+![Hero Interface](assets/gui1.png)
 
 > **Computer-Aided Diagnosis (CAD) system for Thyroid Ultrasound Analysis.**
 >
@@ -17,7 +17,7 @@
 - [Project Overview](#-project-overview)
 - [Methodology & Pipeline](#-methodology--pipeline)
 - [Key Results](#-key-results)
-- [Clinical Integration (TI-RADS)](#-Clinical-Integration--Risk-Stratification)
+- [Clinical Integration & Risk Stratification](#-Clinical-Integration--Risk-Stratification)
 - [Installation](#-installation)
 - [Usage (GUI & CLI)](#-usage-gui--cli)
 - [Repository Structure](#-repository-structure)
@@ -212,7 +212,7 @@ If you use this work in your research, please cite the thesis:
   title   = {Development of a Deep Learning pipeline for thyroid nodule diagnosis: Comparison between CNN and Vision Transformers},
   school  = {Sapienza University of Rome},
   year    = {2025},
-  type    = {Master's Thesis}
+  type    = {Bachelor's Thesis}
 }
 ```
 
@@ -225,4 +225,3 @@ If you use this work in your research, please cite the thesis:
 
 ---
 *For questions or collaborations, please open an Issue.*
-```
