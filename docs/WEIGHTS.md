@@ -41,7 +41,7 @@ released by **Meta AI**.
 The weights are distributed via:
 
 - **Hugging Face Hub**  
-[👉 Model on Hugging Face](https://huggingface.co/<USERNAME>/dinov3-large-thyroid-nodule)
+[👉 Model on Hugging Face](https://huggingface.co/datasets/alexThunder01/dinov3-large-thyroid-nodule)
 
 
 
