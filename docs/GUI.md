@@ -307,5 +307,3 @@ It is **not intended for clinical use**.
 
 **Project:** Thyroid-Nodule-AI
 **Author:** Alessandro Catania
-
-```
