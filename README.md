@@ -148,7 +148,7 @@ python src/gui/app.py
 *   Real-time Detection (YOLO) and Classification (DINO).
 *   PDF Report generation (Experimental).
 
-![GUI Demo](assets/gui1.png)
+![GUI Demo](assets/demo.gif)
 
 ### 2. Command Line Interface (CLI)
 Run the classifier on a single image via terminal.
