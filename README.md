@@ -120,7 +120,7 @@ To move beyond "Black Box" AI, the pipeline integrates **Attention Maps** (for D
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YourUsername/Thyroid-Nodule-AI.git
+git clone https://github.com/AlexThunder01/Thyroid-Nodule-AI.git
 cd Thyroid-Nodule-AI
 
 # 2. Create a virtual environment
